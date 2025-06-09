@@ -7,8 +7,10 @@ export default function Login() {
   const { setLoggedInUser, admins, users, drivers, setAdmins, setDrivers, setUsers } = useAppContext();
 
   const [islogin, setisLogin] = useState(true);
-
-
+  const [role,setRole] = useState('')
+  function handlerole(e) {
+    setRole(e.target.value); 
+  }
   const navig = useNavigate();
 
   function handleSubmit(e) {
@@ -17,7 +19,7 @@ export default function Login() {
     console.log(form)
     if (islogin) 
     {
-      const role = form.role.value;
+     
       const email = form.email.value;
       let user = null;
       // console.log(form.role.value)
@@ -33,7 +35,7 @@ export default function Login() {
       navig(`/${role}`)
     }
     else {
-      const role = form.role.value;
+
       const email = form.email.value;
 
       let user = null;
@@ -48,7 +50,7 @@ export default function Login() {
       }
       else 
       {
-        setUsers(...user, { name: `${form.fname.value} ${form.lname.value}`, email: form.email.value, password: form.password.value });
+        setAdmins(...user, { name: `${form.fname.value} ${form.lname.value}`, email: form.email.value, password: form.password.value });
       }
       setTimeout(() => {
         setisLogin(true);
@@ -93,12 +95,21 @@ export default function Login() {
 
           <div className=''>
             <label htmlFor="role" className="block pb-2">role</label>
-            <select type="" placeholder="option" className=" px-3 py-2 block  w-full border rounded bg-amber-50" name='role' required >
+            <select type="" placeholder="option" onChange ={handlerole}className=" px-3 py-2 block  w-full border rounded bg-amber-50" name='role' required >
               <option value="admin">admin</option>
               <option value="user">user</option>
               <option value="rider">rider</option>
             </select>
           </div>
+
+          {!islogin && role==='rider' && <><div className=''>
+            <label htmlFor="vehicle" className="block pb-2">role</label>
+            <select type="" placeholder="option" className=" px-3 py-2 block  w-full border rounded bg-amber-50" name='vehicle' required >
+              <option value="car">car</option>
+              <option value="bus">bus</option>
+              <option value="auto">auto</option>
+            </select>
+          </div></>}
 
           <button type="submit" className="mt-4 py-2 px-3 w-full border rounded hover:bg-blue-600 bg-indigo-400">{islogin ? 'Login' : 'Signup'}</button>
         </form>

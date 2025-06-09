@@ -3,13 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
 
 export default function UserDashboard() {
-    const { trips, loggedInUser } = useAppContext();
+    const { trips, loggedInUser, setLoggedInUser} = useAppContext();
     const navigate = useNavigate();
 
     const handleLogout =() =>{
-        localStorage.setItem("loggedInUser", JSON.stringify(null));
+        setLoggedInUser(null);
+        localStorage.removeItemItem("loggedInUser");
         alert("You Logged Out");
-        navigate("/");
+        navigate("/user");
     }
 
     if (!loggedInUser) {
@@ -83,15 +84,14 @@ export default function UserDashboard() {
             </div>
 
             <div className="row justify-content-center align-items-center mt-5">
-                <Link to="/user-booking">
+                
                     <button
                         className="btn btn-danger mt-3"
-                        style={{ display: "block", margin: "auto" }}
+                        style={{ display: "block", margin: "auto", width:"30%"}}
                         onClick={handleLogout}
                     >
                         Logout
                     </button>
-                </Link>
             </div>
         </div>
     );

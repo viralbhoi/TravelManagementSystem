@@ -1,56 +1,77 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState,useContext } from "react"
 import { dummyUsers as data } from "../data/DummyData";
 import { useNavigate } from "react-router-dom";
+import { useAppContext } from "../context/AppContext";
+
+
+// data
+//{
+//     "user":[
+//         {
+//             "fname":"admin",
+//             "lname":"admin",
+//             "role":"admin",
+//             "email":"admin@example.com",
+//             "password":"admin"
+//         },
+//         {
+//             "fname":"user",
+//             "lname":"user",
+//             "role":"user",
+//             "email":"user@xample.com",
+//             "password":"user"
+//         },
+//         {
+//             "fname":"driver",
+//             "lname":"driver",
+//             "role":"driver",
+//             "email":"driver@example.com",
+//             "password":"driver"
+//         }
+//     ]
+// }
+
+
+
 export default function Login() {
   
-  const [islogin, setisLogin] = useState(false);
-  const [user, setUser] = useState([]);
+  const{setLoggedInUser,admins,users,drivers}=useAppContext();
+
+  const [islogin, setisLogin] = useState(true);
   
-  useEffect(() => {
-    setUser(data.user);
-    console.log(data.user)
-  }, [])
   
   const navig = useNavigate();
 
   function handleSubmit(e) {
     e.preventDefault();
     const form = e.target;
-    console.log(form.password)
+    console.log(form)
     if (islogin) 
     {
-      const usr = user.find(ele => ele.email === form.email.value)
-      console.log(usr)
-      if (usr) 
-      {
-
-        if (usr && usr.password == form.password.value) {
-          if (usr.role=='admin') {
-            navig('/admin')
-          }
-          else if (usr.role==='driver') {
-            navig('/driver')
-          }
-          else
-          {
-            navig('/user')
-          }
+        const role=form.role.value;
+        const email=form.email.value;
+        let user=null;
+        // console.log(form.role.value)
+        if(form.role.value==='user') user=users.find(u => u.email===email)
+        else if(form.role.value==='rider') user=drivers.find(u => u.email===email)
+        else user=admins.find(u=> u.email==email)
+        // console.log(user)
+        if (!user || user.password!=form.password.value) {
+          return alert("Invaid Creds")
         }
-      }
-      else 
-      {
-        console.log('Access Denied')
-      }
+
+          setLoggedInUser({...user,role})
+          navig(`/${role}`)
     }
     else
     {
-       data.user.push({
-        fname:form.fname.value,
-        lname:form.lname.value,
-        email:form.email.value,
-        password:form.password.value,
-      });
-
+      //  data.user.push({
+      //   fname:form.fname.value,
+      //   lname:form.lname.value,
+      //   email:form.email.value,
+      //   password:form.password.value
+      // });
+                                    // sign up will not work 
       setTimeout(()=>{
         setisLogin(true);
       },1000)
@@ -79,7 +100,7 @@ export default function Login() {
 
           {!islogin && <> <div className=''>
             <label htmlFor="lname" className="block pb-2">lname</label>
-            <input type="text" placeholder="lname" className=" px-3 py-2 block  w-full border rounded bg-amber-50" name="lname" required />
+            <input type="text" placeholder="lname" className=" px-3 py-2 block  w-full border rounded bg-amber-50" name="lname"/>
           </div></>
           }
           <div className=''>
@@ -91,6 +112,15 @@ export default function Login() {
             <label htmlFor="password" className="block pb-2">password</label>
             <input type="text" placeholder="password" className=" px-3 py-2 block  w-full border rounded bg-amber-50" name='password' required />
           </div>
+
+          {islogin&&<><div className=''>
+            <label htmlFor="role" className="block pb-2">role</label>
+            <select type="" placeholder="option" className=" px-3 py-2 block  w-full border rounded bg-amber-50" name='role' required >
+              <option value="admin">admin</option>
+              <option value="user">user</option>
+              <option value="rider">rider</option>
+            </select>
+          </div></>}
 
           <button type="submit" className="mt-4 py-2 px-3 w-full border rounded hover:bg-blue-600 bg-indigo-400">{islogin ? 'Login' : 'Signup'}</button>
         </form>

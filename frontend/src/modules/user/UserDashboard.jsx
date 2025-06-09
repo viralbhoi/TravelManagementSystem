@@ -28,6 +28,7 @@ export default function UserDashboard() {
                     </tr>
                     </thead>
 
+                    <tbody>
                     {userTrips.map((trip,index)=>{
                         return(
                         <tr key={index}>
@@ -51,6 +52,7 @@ export default function UserDashboard() {
                             </td>
                         </tr>)
                     })}
+                    </tbody>
                 </table>
             </div>
 

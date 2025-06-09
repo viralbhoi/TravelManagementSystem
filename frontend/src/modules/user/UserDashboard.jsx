@@ -11,14 +11,17 @@ export default function UserDashboard() {
 
     return (
         <div className="container">
-            <div className="row">
+            <div className="row text-center pb-5 m-5">
                 <h1 className="fs-1">User Dashboard</h1>
             </div>
 
             <div className="row">
                 <table>
                     <tr>
-                        <th> Trip Date</th>
+                        <th> Start Date</th>
+                        <th> End Date</th>
+                        <th> Pickup city</th>
+                        <th> Destination city</th>
                         <th> Vehicle Type</th>
                         <th> Status</th>
                     </tr>
@@ -27,21 +30,30 @@ export default function UserDashboard() {
                         return(
                         <tr key={index}>
                             <td>
-                                {trip.date}
+                                {trip.startDate}
+                            </td>
+                            <td>
+                                {trip.endDate}
+                            </td>
+                            <td>
+                                {trip.pickUp}
+                            </td>
+                            <td>
+                                {trip.destination}
                             </td>
                             <td>
                                 {trip.vehicleType}
                             </td>
                             <td>
-                                {trip.status}
+                                {trip.status === "rejected" ? (trip.status) : (`${trip.status} - ${trip.rejectionReason}`)}
                             </td>
                         </tr>)
                     })}
                 </table>
             </div>
 
-            <div className="row">
-                <Link to="/user-booking">Book a trip</Link>
+            <div className="row justify-content-center align-items-center mt-5">
+                <Link to="/user-booking"><button className="btn btn-primary" style={{display:"block",margin:"auto"}}>Book a trip</button></Link>
             </div>
         </div>
     );

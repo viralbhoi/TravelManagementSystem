@@ -1,45 +1,14 @@
-import { useEffect, useState,useContext } from "react"
-import { dummyUsers as data } from "../data/DummyData";
+import { useEffect, useState, useContext } from "react"
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 
-
-// data
-//{
-//     "user":[
-//         {
-//             "fname":"admin",
-//             "lname":"admin",
-//             "role":"admin",
-//             "email":"admin@example.com",
-//             "password":"admin"
-//         },
-//         {
-//             "fname":"user",
-//             "lname":"user",
-//             "role":"user",
-//             "email":"user@xample.com",
-//             "password":"user"
-//         },
-//         {
-//             "fname":"driver",
-//             "lname":"driver",
-//             "role":"driver",
-//             "email":"driver@example.com",
-//             "password":"driver"
-//         }
-//     ]
-// }
-
-
-
 export default function Login() {
-  
-  const{setLoggedInUser,admins,users,drivers}=useAppContext();
+
+  const { setLoggedInUser, admins, users, drivers, setAdmins, setDrivers, setUsers } = useAppContext();
 
   const [islogin, setisLogin] = useState(true);
-  
-  
+
+
   const navig = useNavigate();
 
   function handleSubmit(e) {
@@ -48,37 +17,46 @@ export default function Login() {
     console.log(form)
     if (islogin) 
     {
-        const role=form.role.value;
-        const email=form.email.value;
-        let user=null;
-        // console.log(form.role.value)
-        if(form.role.value==='user') user=users.find(u => u.email===email)
-        else if(form.role.value==='rider') user=drivers.find(u => u.email===email)
-        else user=admins.find(u=> u.email==email)
-        // console.log(user)
-        if (!user || user.password!=form.password.value) {
-          return alert("Invaid Creds")
-        }
+      const role = form.role.value;
+      const email = form.email.value;
+      let user = null;
+      // console.log(form.role.value)
+      if (form.role.value === 'user') user = users.find(u => u.email === email)
+      else if (form.role.value === 'rider') user = drivers.find(u => u.email === email)
+      else user = admins.find(u => u.email == email)
+      // console.log(user)
+      if (!user || user.password != form.password.value) {
+        return alert("Invaid Creds")
+      }
 
-          setLoggedInUser({...user,role})
-          navig(`/${role}`)
+      setLoggedInUser({ ...user, role })
+      navig(`/${role}`)
     }
-    else
-    {
-      //  data.user.push({
-      //   fname:form.fname.value,
-      //   lname:form.lname.value,
-      //   email:form.email.value,
-      //   password:form.password.value
-      // });
-                                    // sign up will not work 
-      setTimeout(()=>{
+    else {
+      const role = form.role.value;
+      const email = form.email.value;
+
+      let user = null;
+
+      if (form.role.value === 'user') 
+      {
+        setUsers(...user, { name: `${form.fname.value} ${form.lname.value}`, email: form.email.value, password: form.password.value });
+      } 
+      else if (form.role.value === 'rider') 
+      {
+        setDrivers(...user, { name: `${form.fname.value} ${form.lname.value}`, email: form.email.value, password: form.password.value });
+      }
+      else 
+      {
+        setUsers(...user, { name: `${form.fname.value} ${form.lname.value}`, email: form.email.value, password: form.password.value });
+      }
+      setTimeout(() => {
         setisLogin(true);
-      },1000)
+      }, 1000)
 
     }
 
-  }  {/*pls modify this functiion as the use of the data folder*/}
+  } {/*pls modify this functiion as the use of the data folder*/ }
   return (
     <div className="flex items-center min-h-screen justify-center  bg-indigo-900 shadow-xl shadow-amber-300">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
@@ -100,7 +78,7 @@ export default function Login() {
 
           {!islogin && <> <div className=''>
             <label htmlFor="lname" className="block pb-2">lname</label>
-            <input type="text" placeholder="lname" className=" px-3 py-2 block  w-full border rounded bg-amber-50" name="lname"/>
+            <input type="text" placeholder="lname" className=" px-3 py-2 block  w-full border rounded bg-amber-50" name="lname" />
           </div></>
           }
           <div className=''>
@@ -113,14 +91,14 @@ export default function Login() {
             <input type="text" placeholder="password" className=" px-3 py-2 block  w-full border rounded bg-amber-50" name='password' required />
           </div>
 
-          {islogin&&<><div className=''>
+          <div className=''>
             <label htmlFor="role" className="block pb-2">role</label>
             <select type="" placeholder="option" className=" px-3 py-2 block  w-full border rounded bg-amber-50" name='role' required >
               <option value="admin">admin</option>
               <option value="user">user</option>
               <option value="rider">rider</option>
             </select>
-          </div></>}
+          </div>
 
           <button type="submit" className="mt-4 py-2 px-3 w-full border rounded hover:bg-blue-600 bg-indigo-400">{islogin ? 'Login' : 'Signup'}</button>
         </form>

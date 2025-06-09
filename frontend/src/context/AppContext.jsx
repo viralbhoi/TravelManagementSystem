@@ -20,7 +20,7 @@ export const AppProvider = ({ children }) => {
   }, [users, drivers, trips, loggedInUser,admins]);
 
   return (
-    <AppContext.Provider value={{ admins ,users, drivers, trips, setTrips, loggedInUser, setLoggedInUser }}>
+    <AppContext.Provider value={{ admins ,users, drivers, trips, setTrips, loggedInUser, setLoggedInUser ,setAdmins,setDrivers,setUsers}}>
       {children}
     </AppContext.Provider>
   );

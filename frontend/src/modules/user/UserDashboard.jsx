@@ -16,7 +16,8 @@ export default function UserDashboard() {
             </div>
 
             <div className="row">
-                <table>
+                <table className="table-bordered table-hover text-center align-middle">
+                    <thead className="table-dark">
                     <tr>
                         <th> Start Date</th>
                         <th> End Date</th>
@@ -25,6 +26,7 @@ export default function UserDashboard() {
                         <th> Vehicle Type</th>
                         <th> Status</th>
                     </tr>
+                    </thead>
 
                     {userTrips.map((trip,index)=>{
                         return(

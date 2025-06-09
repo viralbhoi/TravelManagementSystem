@@ -13,11 +13,10 @@ export default function TripBookingForm() {
     const navigate = useNavigate();
 
     const bookTrip = () => {
-
-      if (!startDate || !endDate || !pickUp || !destination){
-        alert("No field should be empty!");
-        return false;
-      }
+        if (!startDate || !endDate || !pickUp || !destination) {
+            alert("No field should be empty!");
+            return false;
+        }
         const newTrip = {
             id: Date.now(),
             userId: loggedInUser.id,
@@ -35,7 +34,9 @@ export default function TripBookingForm() {
 
     return (
         <div className="container">
-            <div className="row p-5 mt-5 mb-5 text-center"><h1>Book A trip !!</h1></div>
+            <div className="row p-5 mt-5 mb-5 text-center">
+                <h1>Book A trip !!</h1>
+            </div>
             <div className="row">
                 <label htmlFor="vehicle">Select Vehicle: </label>
                 <select
@@ -83,7 +84,13 @@ export default function TripBookingForm() {
                     onChange={(e) => setDestination(e.target.value)}
                 />
             </div>
-            <button onClick={bookTrip}>Book Trip</button>
+            <button
+                onClick={bookTrip}
+                className="btn btn-primary mt-3"
+                style={{ display: "block", margin: "auto" }}
+            >
+                Book Trip
+            </button>
         </div>
     );
 }

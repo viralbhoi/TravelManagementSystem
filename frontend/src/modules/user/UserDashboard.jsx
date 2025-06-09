@@ -1,9 +1,16 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
 
 export default function UserDashboard() {
     const { trips, loggedInUser } = useAppContext();
+    const navigate = useNavigate();
+
+    const handleLogout =() =>{
+        localStorage.setItem("loggedInUser", JSON.stringify(null));
+        alert("You Logged Out");
+        navigate("/");
+    }
 
     if (!loggedInUser) {
         return (
@@ -71,6 +78,18 @@ export default function UserDashboard() {
                         style={{ display: "block", margin: "auto" }}
                     >
                         Book a Trip
+                    </button>
+                </Link>
+            </div>
+
+            <div className="row justify-content-center align-items-center mt-5">
+                <Link to="/user-booking">
+                    <button
+                        className="btn btn-danger mt-3"
+                        style={{ display: "block", margin: "auto" }}
+                        onClick={handleLogout}
+                    >
+                        Logout
                     </button>
                 </Link>
             </div>

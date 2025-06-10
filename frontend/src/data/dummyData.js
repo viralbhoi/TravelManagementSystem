@@ -10,6 +10,7 @@ export const dummyDrivers = [
   { id: 103, name: "Driver C", vehicleType: "bus" , password: "Ccc@789",email:"C@example.com"},
 ];
 
+
 export const dummyAdmins = [
   {id:1, name:"Viral", password:'Viral',email:"Viral@gmail.com"},
   {id:2, name:"Shubham", password:'Shubham',email:"Shubham@gmail.com"}

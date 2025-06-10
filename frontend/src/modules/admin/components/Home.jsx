@@ -2,9 +2,8 @@ import React from 'react'
 import NotFound from "./NodataFound";
 import { Link } from "react-router-dom";
 
-export default function Home({ pendingReq = [] }) {
+export default function Home() {
     return (
-
         <>
             
         </>

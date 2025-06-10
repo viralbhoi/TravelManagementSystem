@@ -19,7 +19,7 @@ export default function TripBookingForm() {
         }
         const newTrip = {
             id: Date.now(),
-            userId: loggedInUser.id,
+            userName: loggedInUser.name,
             vehicleType,
             startDate,
             endDate,

@@ -1,14 +1,32 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Routes, Route } from 'react-router-dom';
+import History from "./component/History";
+import Navbar from "./component/Navbar";
+import Home from "./component/Home";
+import TripBookingForm from "./TripBookingForm";
+import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
 
 export default function UserDashboard() {
+    
     const { trips, loggedInUser, setLoggedInUser} = useAppContext();
+    
+    const userTripHystory=trips.filter((trip) => trip.userId === loggedInUser.id);
+    const userTrip = userTripHystory.filter((trip) =>  trip.status==='pending');
+
+
+
+    console.log(userTrip)
+    const navLinks = [
+        { label: "Home", href: "/user/" },
+        { label: "Bookings", href: "/user/booking" },
+        { label: "History", href: "/user/history" },
+    ];
     const navigate = useNavigate();
 
-    const handleLogout =() =>{
+    const handleLogout = () => {
         setLoggedInUser(null);
-        localStorage.removeItemItem("loggedInUser");
+        localStorage.removeItem("loggedInUser");
         alert("You Logged Out");
         navigate("/user");
     }
@@ -29,70 +47,17 @@ export default function UserDashboard() {
         );
     }
 
-    const userTrips = trips.filter((trip) => trip.userId === loggedInUser.id);
-
     return (
-        <div className="container">
-            <div className="row text-center pb-5 m-5">
-                <h1 className="fs-1">User Dashboard</h1>
-            </div>
+        <div className="min-w-screen h-screen bg-blue-50">
+            <Navbar title="User Dashboard" navLinks={navLinks} onLogout={handleLogout} />
+            <Routes>
+                <Route path="/" element={<Home userTrips={userTrip}/>} />
+                <Route path="/booking" element={<TripBookingForm />} />
+                <Route path="/history" element={<History userTripHys={userTripHystory} />} />
+                <Route path="" element={<div>Welcome to your dashboard!</div>} />
+            </Routes>
 
-            <div className="row">
-                {userTrips.length === 0 ? (
-                    <p className="text-center">You have no trips booked yet.</p>
-                ) : (
-                    <table className="table table-bordered table-hover text-center align-middle">
-                        <thead className="table-dark">
-                            <tr>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Pickup City</th>
-                                <th>Destination City</th>
-                                <th>Vehicle Type</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {userTrips.map((trip, index) => (
-                                <tr key={index}>
-                                    <td>{trip.startDate}</td>
-                                    <td>{trip.endDate}</td>
-                                    <td>{trip.pickUp}</td>
-                                    <td>{trip.destination}</td>
-                                    <td>{trip.vehicleType}</td>
-                                    <td>
-                                        {trip.status === "rejected"
-                                            ? `Rejected - ${trip.rejectionReason}`
-                                            : trip.status}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                )}
-            </div>
-
-            <div className="row justify-content-center align-items-center mt-5">
-                <Link to="/user-booking">
-                    <button
-                        className="btn btn-primary mt-3"
-                        style={{ display: "block", margin: "auto" }}
-                    >
-                        Book a Trip
-                    </button>
-                </Link>
-            </div>
-
-            <div className="row justify-content-center align-items-center mt-5">
-                
-                    <button
-                        className="btn btn-danger mt-3"
-                        style={{ display: "block", margin: "auto", width:"30%"}}
-                        onClick={handleLogout}
-                    >
-                        Logout
-                    </button>
-            </div>
         </div>
+
     );
 }

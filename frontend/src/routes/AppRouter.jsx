@@ -12,9 +12,9 @@ export default function AppRouter() {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-      <Route path="/user" element={loggedInUser?.role === 'user' ? <UserDashboard /> : <Navigate to="/" />} />
-      <Route path="/admin" element={loggedInUser?.role === 'admin' ? <AdminDashboard /> : <Navigate to="/" />} />
-      <Route path="/driver" element={loggedInUser?.role === 'driver' ? <DriverDashboard /> : <Navigate to="/" />} />
+      <Route path="/user/*" element={loggedInUser?.role === 'user' ? <UserDashboard /> : <Navigate to="/" />} />
+      <Route path="/admin/*" element={loggedInUser?.role === 'admin' ? <AdminDashboard /> : <Navigate to="/" />} />
+      <Route path="/driver/*" element={loggedInUser?.role === 'driver' ? <DriverDashboard /> : <Navigate to="/" />} />
       <Route path='user-booking' element={<TripBookingForm/>}/>
     </Routes>
   );

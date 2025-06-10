@@ -1,115 +1,205 @@
-import { useEffect, useState, useContext } from "react"
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 
 export default function Login() {
+  const {
+    setLoggedInUser,
+    admins,
+    users,
+    drivers,
+    setAdmins,
+    setDrivers,
+    setUsers,
+  } = useAppContext();
 
-  const { setLoggedInUser, admins, users, drivers, setAdmins, setDrivers, setUsers } = useAppContext();
-  console.log(drivers);
-  
-  const [islogin, setisLogin] = useState(true);
-  const [role, setRole] = useState('');//to set the vehicle in the sign up form ie show if role==rider  and islogin==false
+  const [isLogin, setIsLogin] = useState(true);
+  const [role, setRole] = useState(""); // only for UI (e.g., vehicle dropdown)
 
-  function handlerole(e) {
+  const navigate = useNavigate();
+
+  const handleRoleChange = (e) => {
     setRole(e.target.value);
-  }
+  };
 
-  const navig = useNavigate();
-
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
-    console.log(form)
-    if (islogin) {
+    const selectedRole = form.role.value;
+    const email = form.email.value;
+    const password = form.password.value;
 
-      const email = form.email.value;
+    if (isLogin) {
       let user = null;
-      // console.log(form.role.value)
-      if (form.role.value === 'user') user = users.find(u => u.email === email)
-      else if (form.role.value === 'driver') user = drivers.find(u => u.email === email)
-      else user = admins.find(u => u.email == email)
-      // console.log(user)
-      if (!user || user.password != form.password.value) {
-        return alert("Invaid Creds")
+
+      if (selectedRole === "user") {
+        user = users.find((u) => u.email === email);
+      } else if (selectedRole === "driver") {
+        user = drivers.find((u) => u.email === email);
+      } else {
+        user = admins.find((u) => u.email === email);
       }
 
-      setLoggedInUser({ ...user, role })
-      navig(`/${role}`)
-    }
-    else {
-
-      if (form.role.value === 'user') {
-        setUsers(prev => [...prev, { name: `${form.fname.value} ${form.lname.value}`, email: form.email.value, password: form.password.value }]);
+      if (!user || user.password !== password) {
+        return alert("Invalid Credentials");
       }
-      else if (form.role.value === 'driver') {
-        setDrivers(prev => [...prev, { name: `${form.fname.value} ${form.lname.value}`, email: form.email.value, password: form.password.value, vehicleType: form.vehicle.value }]);
 
+      setLoggedInUser({ ...user, role: selectedRole });
+      navigate(`/${selectedRole}`);
+    } else {
+      const newUser = {
+        name: `${form.fname.value} ${form.lname.value}`,
+        email,
+        password,
+      };
+
+      if (selectedRole === "user") {
+        setUsers((prev) => [...prev, newUser]);
+      } else if (selectedRole === "driver") {
+        const vehicleType = form.vehicle.value;
+        setDrivers((prev) => [
+          ...prev,
+          { ...newUser, vehicleType },
+        ]);
+      } else {
+        setAdmins((prev) => [...prev, newUser]);
       }
-      else {setAdmins(prev => [...prev, { name: `${form.fname.value} ${form.lname.value}`, email: form.email.value, password: form.password.value }]);}
-      
+
       setTimeout(() => {
-        setisLogin(true);
-      }, 1000)
-
+        setIsLogin(true);
+      }, 1000);
     }
+  };
 
-  } {/*pls modify this functiion as the use of the data folder*/ }
   return (
-    <div className="flex items-center min-h-screen justify-center  bg-indigo-900 shadow-xl shadow-amber-300">
+    <div className="flex items-center min-h-screen justify-center bg-indigo-900 shadow-xl shadow-amber-300">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
-        {/* bg-cyan-500 flex-col min-h-100 rounded-md border-1 */}
-        <div>
-          <h1 className="flex items-center justify-center text-2xl">{islogin ? 'Login' : 'Signup'}</h1>
-          <div className="flex justify-center pt-6 gap-10 mb-5">
-            <button className={`flex-1 rounded-2xl h-10 ${islogin ? 'bg-indigo-400' : 'bg-indigo-100'}`} onClick={() => { setisLogin(true) }}>Login</button>
-            <button className={`flex-1 rounded-2xl h-10 ${islogin ? 'bg-indigo-100' : 'bg-indigo-400'}`} onClick={() => { setisLogin(false) }}>Signup</button>
-          </div>
+        <h1 className="flex items-center justify-center text-2xl">
+          {isLogin ? "Login" : "Signup"}
+        </h1>
+
+        <div className="flex justify-center pt-6 gap-10 mb-5">
+          <button
+            type="button"
+            className={`flex-1 rounded-2xl h-10 ${
+              isLogin ? "bg-indigo-400" : "bg-indigo-100"
+            }`}
+            onClick={() => setIsLogin(true)}
+          >
+            Login
+          </button>
+          <button
+            type="button"
+            className={`flex-1 rounded-2xl h-10 ${
+              isLogin ? "bg-indigo-100" : "bg-indigo-400"
+            }`}
+            onClick={() => setIsLogin(false)}
+          >
+            Signup
+          </button>
         </div>
-        <form className="flex-col space-y-7 items-center justify-center" onSubmit={handleSubmit}>
 
-          {!islogin && <> <div className=''>
-            <label htmlFor="fname" className="block pb-2">fname</label>
+        <form
+          className="flex-col space-y-7 items-center justify-center"
+          onSubmit={handleSubmit}
+        >
+          {!isLogin && (
+            <>
+              <div>
+                <label htmlFor="fname" className="block pb-2">
+                  First Name
+                </label>
+                <input
+                  type="text"
+                  name="fname"
+                  required
+                  placeholder="First name"
+                  className="px-3 py-2 w-full border rounded bg-amber-50"
+                />
+              </div>
 
-            <input type="text" placeholder="fname" className=" px-3 py-2  w-full border rounded bg-amber-50" name="fname" required />
-          </div></>}
+              <div>
+                <label htmlFor="lname" className="block pb-2">
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  name="lname"
+                  placeholder="Last name"
+                  className="px-3 py-2 w-full border rounded bg-amber-50"
+                />
+              </div>
+            </>
+          )}
 
-          {!islogin && <> <div className=''>
-            <label htmlFor="lname" className="block pb-2">lname</label>
-            <input type="text" placeholder="lname" className=" px-3 py-2 block  w-full border rounded bg-amber-50" name="lname" />
-          </div></>
-          }
-          <div className=''>
-            <label htmlFor="email" className="block pb-2">email</label>
-            <input type="text" placeholder="email" className=" px-3 py-2 block  w-full border rounded bg-amber-50 " name="email" required />
+          <div>
+            <label htmlFor="email" className="block pb-2">
+              Email
+            </label>
+            <input
+              type="text"
+              name="email"
+              required
+              placeholder="Email"
+              className="px-3 py-2 w-full border rounded bg-amber-50"
+            />
           </div>
 
-          <div className=''>
-            <label htmlFor="password" className="block pb-2">password</label>
-            <input type="text" placeholder="password" className=" px-3 py-2 block  w-full border rounded bg-amber-50" name='password' required />
+          <div>
+            <label htmlFor="password" className="block pb-2">
+              Password
+            </label>
+            <input
+              type="text"
+              name="password"
+              required
+              placeholder="Password"
+              className="px-3 py-2 w-full border rounded bg-amber-50"
+            />
           </div>
 
-          <div className=''>
-            <label htmlFor="role" className="block pb-2">role</label>
-            <select type="" placeholder="option" onChange={handlerole} className=" px-3 py-2 block  w-full border rounded bg-amber-50" name='role' required >
-              <option value="admin">admin</option>
-              <option value="user">user</option>
-              <option value="driver">driver</option>
+          <div>
+            <label htmlFor="role" className="block pb-2">
+              Role
+            </label>
+            <select
+              name="role"
+              required
+              onChange={handleRoleChange}
+              className="px-3 py-2 w-full border rounded bg-amber-50"
+            >
+              <option value="">Select</option>
+              <option value="admin">Admin</option>
+              <option value="user">User</option>
+              <option value="driver">Driver</option>
             </select>
           </div>
 
-          {!islogin && role === 'driver' && <><div className=''>
-            <label htmlFor="vehicle" className="block pb-2">vehicle</label>
-            <select type="" placeholder="option" className=" px-3 py-2 block  w-full border rounded bg-amber-50" name='vehicle' required >
-              <option value="car">car</option>
-              <option value="bus">bus</option>
-              <option value="auto">auto</option>
-            </select>
-          </div></>}
+          {!isLogin && role === "driver" && (
+            <div>
+              <label htmlFor="vehicle" className="block pb-2">
+                Vehicle Type
+              </label>
+              <select
+                name="vehicle"
+                required
+                className="px-3 py-2 w-full border rounded bg-amber-50"
+              >
+                <option value="car">Car</option>
+                <option value="bus">Bus</option>
+                <option value="auto">Auto</option>
+              </select>
+            </div>
+          )}
 
-          <button type="submit" className="mt-4 py-2 px-3 w-full border rounded hover:bg-blue-600 bg-indigo-400">{islogin ? 'Login' : 'Signup'}</button>
+          <button
+            type="submit"
+            className="mt-4 py-2 px-3 w-full border rounded hover:bg-blue-600 bg-indigo-400"
+          >
+            {isLogin ? "Login" : "Signup"}
+          </button>
         </form>
       </div>
     </div>
-  )
+  );
 }
-

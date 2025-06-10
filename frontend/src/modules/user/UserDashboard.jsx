@@ -14,9 +14,6 @@ export default function UserDashboard() {
     const userTripHystory=trips.filter((trip) => trip.userId === loggedInUser.id);
     const userTrip = userTripHystory.filter((trip) =>  trip.status==='pending');
 
-
-
-    console.log(userTrip)
     const navLinks = [
         { label: "Home", href: "/user/" },
         { label: "Bookings", href: "/user/booking" },
@@ -54,7 +51,7 @@ export default function UserDashboard() {
                 <Route path="/" element={<Home userTrips={userTrip}/>} />
                 <Route path="/booking" element={<TripBookingForm />} />
                 <Route path="/history" element={<History userTripHys={userTripHystory} />} />
-                <Route path="" element={<div>Welcome to your dashboard!</div>} />
+             
             </Routes>
 
         </div>

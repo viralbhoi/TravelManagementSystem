@@ -7,19 +7,20 @@ export default function Login() {
   const { setLoggedInUser, admins, users, drivers, setAdmins, setDrivers, setUsers } = useAppContext();
 
   const [islogin, setisLogin] = useState(true);
-  const [role,setRole] = useState('')
+  const [role, setRole] = useState('');//to set the vehicle in the sign up form ie show if role==rider  and islogin==false
+
   function handlerole(e) {
-    setRole(e.target.value); 
+    setRole(e.target.value);
   }
+
   const navig = useNavigate();
 
   function handleSubmit(e) {
     e.preventDefault();
     const form = e.target;
     console.log(form)
-    if (islogin) 
-    {
-     
+    if (islogin) {
+
       const email = form.email.value;
       let user = null;
       // console.log(form.role.value)
@@ -36,22 +37,16 @@ export default function Login() {
     }
     else {
 
-      const email = form.email.value;
-
-      let user = null;
-
-      if (form.role.value === 'user') 
-      {
-        setUsers(...user, { name: `${form.fname.value} ${form.lname.value}`, email: form.email.value, password: form.password.value });
-      } 
-      else if (form.role.value === 'rider') 
-      {
-        setDrivers(...user, { name: `${form.fname.value} ${form.lname.value}`, email: form.email.value, password: form.password.value });
+      if (form.role.value === 'user') {
+        setUsers(...users, { name: `${form.fname.value} ${form.lname.value}`, email: form.email.value, password: form.password.value });
       }
-      else 
-      {
-        setAdmins(...user, { name: `${form.fname.value} ${form.lname.value}`, email: form.email.value, password: form.password.value });
+      else if (form.role.value === 'rider') {
+        setDrivers(...ride, { name: `${form.fname.value} ${form.lname.value}`, email: form.email.value, password: form.password.value, vehicleType: form.vehice.value });
       }
+      else {
+        setAdmins(...admins, { name: `${form.fname.value} ${form.lname.value}`, email: form.email.value, password: form.password.value });
+      }
+      
       setTimeout(() => {
         setisLogin(true);
       }, 1000)
@@ -95,15 +90,15 @@ export default function Login() {
 
           <div className=''>
             <label htmlFor="role" className="block pb-2">role</label>
-            <select type="" placeholder="option" onChange ={handlerole}className=" px-3 py-2 block  w-full border rounded bg-amber-50" name='role' required >
+            <select type="" placeholder="option" onChange={handlerole} className=" px-3 py-2 block  w-full border rounded bg-amber-50" name='role' required >
               <option value="admin">admin</option>
               <option value="user">user</option>
               <option value="rider">rider</option>
             </select>
           </div>
 
-          {!islogin && role==='rider' && <><div className=''>
-            <label htmlFor="vehicle" className="block pb-2">role</label>
+          {!islogin && role === 'rider' && <><div className=''>
+            <label htmlFor="vehicle" className="block pb-2">vehicle</label>
             <select type="" placeholder="option" className=" px-3 py-2 block  w-full border rounded bg-amber-50" name='vehicle' required >
               <option value="car">car</option>
               <option value="bus">bus</option>

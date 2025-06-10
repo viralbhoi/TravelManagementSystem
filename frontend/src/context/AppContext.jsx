@@ -17,6 +17,7 @@ export const AppProvider = ({ children }) => {
     saveToLS('trips', trips);
     saveToLS('admins', admins)
     saveToLS('loggedInUser', loggedInUser);
+    console.log(drivers)
   }, [users, drivers, trips, loggedInUser,admins]);
 
   return (
